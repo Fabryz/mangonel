@@ -2,6 +2,7 @@ Mangonel
 ======
 
 Default HTML5 Canvas 2D + Node.js + Express.js + Socket.IO game project template
+Based on my [default](https://github.com/Fabryz/default) app template
 
 It provides:
 
