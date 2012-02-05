@@ -18,6 +18,7 @@ It provides:
 * Minimal server authority for player position
 * Simple player visualization on HTML5 Canvas
 * Uses [Paul Irish's requestAnimationFrame](http://paulirish.com/2011/requestanimationframe-for-smart-animating/)
+* Toggable debug console with "\"
 * Show FPS
 
 Online working demo app: [http://mangonel.nodejitsu.com/](http://mangonel.nodejitsu.com/)
