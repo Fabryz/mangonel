@@ -132,8 +132,8 @@ io.sockets.on('connection', function(client) {
 	totPlayers++;
 	console.log('+ Player '+ client.id +' connected, total players: '+ totPlayers);
 
-	client.emit("clientId", { id: client.id });
-	io.sockets.emit("tot", { tot: totPlayers });
+	client.emit('clientId', { id: client.id });
+	io.sockets.emit('tot', { tot: totPlayers });
 
 	client.on('play', function(data) {
 		//console.dir(data);
@@ -151,8 +151,10 @@ io.sockets.on('connection', function(client) {
 				break;
 			}
 		}
-		client.broadcast.emit('quit', { id: client.id });
+
 		totPlayers--;
+		client.broadcast.emit('quit', { id: client.id });
+		io.sockets.emit('tot', { tot: totPlayers });
 		console.log('- Player '+ quitter +' ('+ client.id +') disconnected, total players: '+ totPlayers);
 	});
 });
