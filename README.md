@@ -3,6 +3,7 @@ Mangonel
 
 Default HTML5 Canvas 2D + Node.js + Express.js + Socket.IO game project template
 Based on my [default](https://github.com/Fabryz/default) app template
+Mangonel is actually a stripped version of [Wander](https://github.com/Fabryz/wander), I'm trying to polish it
 
 It provides:
 
