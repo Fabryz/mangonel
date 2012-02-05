@@ -9,55 +9,6 @@ $(document).ready(function() {
 		tot = $("#tot"),
 		debug = $("#debug");
 
-	function canvasClick() { // FIXME testing GUI clicks
-		GUI.click(function(e) { 
-			var canvasOffset = game.canvas.offset(), //FIXME can even remove as it's at 0:0
-				canvasX = Math.floor(e.pageX - canvasOffset.left),
-				canvasY = Math.floor(e.pageY - canvasOffset.top),
-				clickMapX = (canvasX + game.vp.x),
-				clickMapY = (canvasY + game.vp.y),
-				coords = game.world.mapToVp(clickMapX, clickMapY),
-				isInside = game.world.isInside(clickMapX, clickMapY),
-				tileX = Math.floor(clickMapX / game.serverConfig.tileWidth),
-				tileY = Math.floor(clickMapY / game.serverConfig.tileWidth),
-				tilePickupables = [],
-				itemsQty = 0;
-				
-			/*//debug
-			console.log('page '+ clickMapX +':'+ clickMapY +' '+ isInside);		
-			game.ctx.beginPath();
-			game.ctx.arc(canvasX, canvasY, 15, 0, Math.PI * 2, true);
-			game.ctx.closePath();
-			game.ctx.fill();
-			//debug*/
-			
-			if (isInside) {
-				tilePickupables = game.world.checkForPickupable(tileX, tileY);
-				itemsQty = tilePickupables.length;
-					
-				if (isCloseTo(game.player.x, game.player.y, clickMapX, clickMapY, 1)) {
-					//console.log(tileX +':'+ tileY +' itemsQty '+ itemsQty);				
-					
-					if (itemsQty > 0) {
-						//if (!isAlreadyPicked(tileX, tileY)) {
-							closePickupWindow();
-							for(var i = 0; i < itemsQty; i++) {
-								$("#pickup #items").append('<li id="items-slot-'+ i +'" class="empty-slot"><img src="'+ game.world.ts.tilesFolder + tilePickupables[i].tile.src +'" title="'+ tilePickupables[i].tile.name  +'" alt="'+ tilePickupables[i].tile.name  +'" /></li>');
-							}
-							game.pickupables = tilePickupables;
-							$("#pickup").show(); // perf: show only if not :visible?
-						//}
-					}
-				} else {
-					if (itemsQty > 0) {
-						game.chatMessage('* <em>That item is too far to reach.</em>');
-					}	
-				}
-			}
-		});
-	}
-
-
 	function sendMovement() {
 		var nowMove;
 
