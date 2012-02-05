@@ -48,6 +48,8 @@ Installation
 4. Point your browser to ``YOUR_SERVER_IP:8080``
 5. Learn it, be it, develop it, play it
 
+Online working demo app: [http://mangonel.nodejitsu.com/](http://mangonel.nodejitsu.com/)
+
 License
 -------
 
