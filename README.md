@@ -9,6 +9,7 @@ It provides:
 
 * Prepared a minimal realtime multiplayer environment
 * Shared classes for client / server
+* Console.log debug messages
 * Player connection / disconnection
 * Player list management and synchronization
 * Player class with id, nick, position...
