@@ -20,6 +20,8 @@ It provides:
 * Uses [Paul Irish's requestAnimationFrame](http://paulirish.com/2011/requestanimationframe-for-smart-animating/)
 * Show FPS
 
+Online working demo app: [http://mangonel.nodejitsu.com/](http://mangonel.nodejitsu.com/)
+
 TODOs:
 
 * Ping
@@ -27,6 +29,7 @@ TODOs:
 * Collisions with map bounds and other players
 * Canvas click
 * Websocket message enumeration
+* Tileset engine (maybe)
 
 Requirements
 ------------
@@ -47,8 +50,6 @@ Installation
 3. Start the server with ``node server.js``
 4. Point your browser to ``YOUR_SERVER_IP:8080``
 5. Learn it, be it, develop it, play it
-
-Online working demo app: [http://mangonel.nodejitsu.com/](http://mangonel.nodejitsu.com/)
 
 License
 -------
