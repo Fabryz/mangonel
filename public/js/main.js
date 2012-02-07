@@ -1,9 +1,7 @@
 $(document).ready(function() {
 	
 	var clientId = $("#clientId"),
-		online = $("#online"),
-		tot = $("#tot"),
-		debug = $("#debug");
+		tot = $("#tot");
 
 	/*
 	* Main
