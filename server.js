@@ -42,7 +42,10 @@ console.log("* Express server listening in %s mode", app.settings.env);
 var	io = require('socket.io').listen(app),
 	Player = require('./public/js/Player.js').Player,
 	players = [],
- 	totPlayers = 0;
+ 	totPlayers = 0,
+ 	pings = [],
+ 	pingInterval = null,
+ 	pingEvery = 5000;
 	
 io.configure(function() { 
 	io.enable('browser client minification');
@@ -125,7 +128,19 @@ function sendGameData(client, data) { //TODO: Do bounds and anticheat checks
 	}	
 }
 
-io.sockets.on('connection', function(client) {
+// ping is intended as server -> client -> server time	
+function pingClients() {
+	var length = players.length;
+	for(var i = 0; i < length; i++) {
+		if (players[i].id) {
+			pings[players[i].id] = { time: Date.now(), ping: 0 };
+			//console.log('Ping? '+ players[i].id); //log filler
+			game.sockets[players[i].id].emit('ping');
+		}
+	}
+}
+
+var game = io.sockets.on('connection', function(client) {
 	newPlayer(client);	
 	sendPlayerList(client);
 
@@ -135,9 +150,30 @@ io.sockets.on('connection', function(client) {
 	client.emit('clientId', { id: client.id });
 	io.sockets.emit('tot', { tot: totPlayers });
 
+	if ((totPlayers == 1) && (pingInterval === null)) {
+		pingInterval = setInterval(pingClients, pingEvery);
+	}
+
 	client.on('play', function(data) {
 		//console.dir(data);
 		sendGameData(client, data);
+	});
+
+	client.on('pong', function(data) {		
+		pings[client.id] = { ping: (Date.now() - pings[client.id].time) };
+
+		var length = players.length;
+		for(var i = 0; i < length; i++) {
+			if (players[i].id == client.id) {
+				players[i].ping = pings[client.id].ping;
+				break;
+			}
+		}
+
+		//console.log('Pong! '+ client.id +' '+ pings[client.id].ping +'ms'); //log filler
+
+		//broadcast confirmed player ping
+		game.emit('pingupdate', { id: client.id, ping: pings[client.id].ping });
 	});
 
 	client.on('disconnect', function() {
@@ -156,5 +192,10 @@ io.sockets.on('connection', function(client) {
 		client.broadcast.emit('quit', { id: client.id });
 		io.sockets.emit('tot', { tot: totPlayers });
 		console.log('- Player '+ quitter +' ('+ client.id +') disconnected, total players: '+ totPlayers);
+
+		if (totPlayers == 0) {
+			clearTimeout(pingInterval);
+			pingInterval = null;
+		}
 	});
 });

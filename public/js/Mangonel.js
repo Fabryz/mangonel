@@ -242,6 +242,24 @@
 			}
 		});
 
+		socket.on('ping', function(data) {
+			socket.emit('pong', { time: Date.now() });
+			//debug('Ping? Pong!');
+		});
+		
+		socket.on('pingupdate', function(data) {
+			var length = players.length;
+			for(var i = 0; i < length; i++) {
+				if (players[i].id == data.id) {
+					players[i].ping = data.ping;
+					if (player.id == data.id) {
+						player.ping = data.ping;
+						$("#ping").html(player.ping +'ms');
+					}
+				}
+			}
+		});
+
 		return {
 			socket: socket,
 			keys: keys,
