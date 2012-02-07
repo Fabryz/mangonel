@@ -1,8 +1,10 @@
 Mangonel
 ======
 
-Default HTML5 Canvas 2D + Node.js + Express.js + Socket.IO game project template
+Default HTML5 Canvas 2D + Node.js + Express.js + Socket.IO game project template (boilerplate?)
+
 Based on my [default](https://github.com/Fabryz/default) app template
+
 Mangonel is actually a stripped version of [Wander](https://github.com/Fabryz/wander), I'm trying to polish it
 
 It provides:
@@ -20,13 +22,14 @@ It provides:
 * Simple player visualization on HTML5 Canvas
 * Uses [Paul Irish's requestAnimationFrame](http://paulirish.com/2011/requestanimationframe-for-smart-animating/)
 * Toggable debug panel with "\"
-* Show FPS
+* Show FPS on debug panel
 * Ping all connected clients, show current player ping on debug panel
 
 Online working demo app: [http://mangonel.nodejitsu.com/](http://mangonel.nodejitsu.com/)
 
 TODOs:
 
+* View player list
 * Viewport
 * Collisions with map bounds and other players
 * Canvas click
