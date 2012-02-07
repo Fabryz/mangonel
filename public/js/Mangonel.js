@@ -172,6 +172,76 @@
 			}
 		};
 
+		socket.on('join', function(data) {						
+			player.id = data.player.id;
+			player.nick = data.player.nick;
+			player.x = data.player.x;
+			player.y = data.player.y;
+			
+			debug('Received current player id: '+ player.id);
+			debug('You have joined the server.');
+		});
+
+		socket.on('quit', function(data) {
+			var quitter = '';
+
+			var length = players.length;
+			for(var i = 0; i < length; i++) {
+				if (players[i].id == data.id) {
+					quitter = players[i].nick;
+					players.splice(i, 1);
+					break;
+				}
+			}
+			
+			debug('Player quitted: '+ quitter +' (id '+ data.id +')');
+		});
+
+		socket.on('newplayer', function(data) {	
+			var newPlayer = new Player();
+			newPlayer.id = data.player.id;
+			newPlayer.nick = data.player.nick;
+			newPlayer.x = data.player.x;
+			newPlayer.y = data.player.y;
+		
+			players.push(newPlayer);
+			debug('New player joined: '+ newPlayer.nick);
+			tmpPlayer = {};
+		});
+		
+		socket.on('playerlist', function(data) {				
+			players = []; //prepare for new list
+
+			var length = data.list.length;
+			for(var i = 0; i < length; i++) {		
+				var tmpPlayer = new Player();
+				tmpPlayer.id = data.list[i].id;
+				tmpPlayer.nick = data.list[i].nick;
+				tmpPlayer.x = data.list[i].x;
+				tmpPlayer.y = data.list[i].y;
+				tmpPlayer.ping = data.list[i].ping;
+				
+				players.push(tmpPlayer);
+				tmpPlayer = {};
+			}
+
+			debug('Initial player list received: '+ length +' players.');	
+		});
+
+		socket.on('play', function(data) {
+			var length = players.length;
+			for(var i = 0; i < length; i++) {
+				if (players[i].id == data.id) {
+					players[i].x = data.x;
+					players[i].y = data.y;
+					if (player.id == data.id) {
+						player.x = data.x;
+						player.y = data.y;
+					}
+				}
+			}
+		});
+
 		return {
 			socket: socket,
 			keys: keys,
