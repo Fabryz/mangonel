@@ -41,6 +41,7 @@
 
 		var stop = function() {
 			isPlaying = false;
+			debug('* Mangonel stopped.');
 		};
 
 		var toggleDebugPanel = function(spd) {
@@ -57,7 +58,7 @@
 
 		var start = function() {
 			if (isReady) {
-				debug('Ready! Starting.');
+				debug('* Mangonel started.');
 				isPlaying = true;
 				
 				$(window).keydown(function(e) {
@@ -119,7 +120,7 @@
 
 				loop();
 			} else {
-				debug('Not ready.');
+				debug('* Mangonel not ready.');
 			}
 		};
 
