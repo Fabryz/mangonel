@@ -4,9 +4,9 @@
 		var desiredFPS = 60,
 			allowSendEvery = 75,
 			isReady = true,
-			isPlaying = false;
-		
-		var	keys = {
+			isPlaying = false,
+			fps_handle = $("#fps"),
+			keys = {
 				up : 38,
 				down : 40,
 				left : 37,
@@ -55,6 +55,122 @@
 			}
 		};
 
+		var start = function() {
+			if (isReady) {
+				debug('Ready! Starting.');
+				isPlaying = true;
+				
+				$(window).keydown(function(e) {
+					//e.preventDefault();
+
+					switch(e.keyCode) {
+						case keys.left:
+								player.moveLeft = true;
+							break;
+						case keys.right:
+								player.moveRight = true;
+							break;
+						case keys.up:
+								player.moveUp = true;
+							break;
+						case keys.down:
+								player.moveDown = true;
+							break;
+
+						default:
+							break;
+					}
+
+				});
+				
+				$(window).keypress(function(e) {
+					//e.preventDefault();
+					var keyCode = e.keyCode;
+				
+				});
+
+				$(window).keyup(function(e) {
+					//e.preventDefault();
+					
+					switch(e.keyCode) {
+						case keys.left:
+								player.moveLeft = false;
+							break;
+						case keys.right:
+								player.moveRight = false;
+							break;
+						case keys.up:
+								player.moveUp = false;
+							break;
+						case keys.down:
+								player.moveDown = false;
+							break;
+
+						case keys.backslash:
+								toggleDebugPanel();
+							break;
+
+						default:
+							break;
+					}
+				});
+
+				fps.init(fps_handle);
+
+				loop();
+			} else {
+				debug('Not ready.');
+			}
+		};
+
+		var loop = function() {
+			ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+			
+			if (isPlaying) {			
+				sendMovement();
+
+				player.draw(ctx);
+
+				var length = players.length;
+				for(var i = 0; i < length; i++) {
+					if (players[i].id != player.id) {
+						players[i].draw(ctx);
+			    	}
+				}
+				
+				fps.count++;
+
+				requestAnimationFrame(loop);
+			}
+		}
+
+		var sendMovement = function() {
+			var nowMove;
+
+			if (player.hasMoved()) {
+				var dir = 'idle';
+
+				if (player.moveLeft) {
+					dir = 'l';
+				}
+				if (player.moveRight) {
+					dir = 'r';
+				}
+				if (player.moveUp) {
+					dir = 'u';
+				}
+				if (player.moveDown) {
+					dir = 'd';
+				}
+
+				nowMove = Date.now();
+				if ((nowMove - player.lastMove) > allowSendEvery) { 
+					socket.emit('play', { id: player.id, dir: dir });
+					player.lastMove = Date.now();
+				}
+			}
+		};
+
 		return {
 			socket: socket,
 			keys: keys,
@@ -71,7 +187,9 @@
 			canvasHeight: canvasHeight,
 
 			debug: debug,
+			start: start,
 			stop: stop,
+			loop: loop,
 			toggleDebugPanel: toggleDebugPanel
 		};
 	};

@@ -1,137 +1,15 @@
 $(document).ready(function() {
-	var Game;
 	
-	var fps = $("#fps"),
-		clientId = $("#clientId"),
+	var clientId = $("#clientId"),
 		online = $("#online"),
 		tot = $("#tot"),
 		debug = $("#debug");
-
-	function sendMovement() {
-		var nowMove;
-
-		if (Game.player.hasMoved()) {
-			var dir = 'idle';
-
-			if (Game.player.moveLeft) {
-				dir = 'l';
-			}
-			if (Game.player.moveRight) {
-				dir = 'r';
-			}
-			if (Game.player.moveUp) {
-				dir = 'u';
-			}
-			if (Game.player.moveDown) {
-				dir = 'd';
-			}
-
-			nowMove = Date.now();
-			if ((nowMove - Game.player.lastMove) > Game.allowSendEvery) { 
-				Game.socket.emit('play', { id: Game.player.id, dir: dir });
-				Game.player.lastMove = Date.now();
-			}
-		}
-	}
-
-	function gameLoop() {
-		Game.ctx.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
-		
-		if (Game.isPlaying) {			
-			sendMovement();
-
-			Game.player.draw(Game.ctx);
-
-			var length = Game.players.length;
-			for(var i = 0; i < length; i++) {
-				if (Game.players[i].id != Game.player.id) {
-					Game.players[i].draw(Game.ctx);
-		    	}
-			}
-			
-			Game.fps.count++;
-
-			requestAnimationFrame(gameLoop);
-		}
-	}
-
-	function gameStart() {
-		if (Game.isReady) {
-			Game.debug('Ready! Starting.');
-			Game.isPlaying = true;
-			
-			$(window).keydown(function(e) {
-				//e.preventDefault();
-
-				switch(e.keyCode) {
-					case Game.keys.left:
-							Game.player.moveLeft = true;
-						break;
-					case Game.keys.right:
-							Game.player.moveRight = true;
-						break;
-					case Game.keys.up:
-							Game.player.moveUp = true;
-						break;
-					case Game.keys.down:
-							Game.player.moveDown = true;
-						break;
-
-					default:
-						break;
-				}
-
-			});
-			
-			$(window).keypress(function(e) {
-				//e.preventDefault();
-				var keyCode = e.keyCode;
-			
-			});
-
-			$(window).keyup(function(e) {
-				//e.preventDefault();
-				
-				switch(e.keyCode) {
-					case Game.keys.left:
-							Game.player.moveLeft = false;
-						break;
-					case Game.keys.right:
-							Game.player.moveRight = false;
-						break;
-					case Game.keys.up:
-							Game.player.moveUp = false;
-						break;
-					case Game.keys.down:
-							Game.player.moveDown = false;
-						break;
-
-					case Game.keys.backslash:
-							Game.toggleDebugPanel();
-						break;
-
-					default:
-						break;
-				}
-			});
-
-			Game.fps.init(fps);
-
-			gameLoop();
-		} else {
-			Game.debug('Not ready.');
-		}
-	}
-
-	function gameInit() {
-		Game = new Mangonel();
-	}
 
 	/*
 	* Main
 	*/
 
-	gameInit();
+	var Game = new Mangonel();
 
 	/* 
 	* Socket.io
@@ -139,7 +17,7 @@ $(document).ready(function() {
 	    
     Game.socket.on('connect', function() {
     	Game.debug('Connected.');
-    	gameStart();
+    	Game.start();
 	});
 			
 	Game.socket.on('disconnect', function() {
