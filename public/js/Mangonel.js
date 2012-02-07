@@ -5,7 +5,8 @@
 			allowSendEvery = 75,
 			isReady = true,
 			isPlaying = false,
-			fps_handle = $("#fps"),
+			fps_handle = $('#fps'),
+			debugPanel = $('#debug'),
 			keys = {
 				up : 38,
 				down : 40,
@@ -46,10 +47,11 @@
 
 		var toggleDebugPanel = function(spd) {
 			var speed = spd || 'fast';
-		
-			$('#debug').fadeToggle(speed);
-			$('#debug').toggleClass("active");
-			if ($('#debug').hasClass("active")) {
+			
+			debugPanel.stop();
+			debugPanel.fadeToggle(speed);
+			debugPanel.toggleClass("active");
+			if (debugPanel.hasClass("active")) {
 
 			} else {
 
