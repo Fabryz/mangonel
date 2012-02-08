@@ -7,6 +7,7 @@
 			isPlaying = false,
 			fps_handle = $('#fps'),
 			debugPanel = $('#debug'),
+			scoreboard = $("#scoreboard"),
 			keys = {
 				up : 38,
 				down : 40,
@@ -58,6 +59,20 @@
 			}
 		};
 
+		var showScoreboard = function() {
+			var list = scoreboard.find('ul');
+		
+			list.html('');
+			var length = players.length;
+			for(var i = 0; i < length; i++) {
+				list.append("<li>"+ players[i] +"</li>");
+			}
+			
+			list.append("<li>&nbsp;</li>");
+			list.append("<li>Total players: "+ length +"</li>");
+			scoreboard.show();
+		}
+
 		var start = function() {
 			if (isReady) {
 				debug('* Mangonel started.');
@@ -78,6 +93,11 @@
 							break;
 						case keys.down:
 								player.moveDown = true;
+							break;
+
+						case keys.tab:
+								e.preventDefault();
+								showScoreboard();
 							break;
 
 						default:
@@ -112,10 +132,14 @@
 						case keys.backslash:
 								toggleDebugPanel();
 							break;
+						case keys.tab:
+								scoreboard.hide();
+							break;
 
 						default:
 							break;
 					}
+
 				});
 
 				fps.init(fps_handle);

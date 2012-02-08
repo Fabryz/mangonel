@@ -21,15 +21,15 @@ It provides:
 * Minimal server authority for player position
 * Simple player visualization on HTML5 Canvas
 * Uses [Paul Irish's requestAnimationFrame](http://paulirish.com/2011/requestanimationframe-for-smart-animating/)
-* Toggable debug panel with "\"
+* Toggable debug panel by pressing "\"
 * Show FPS on debug panel
 * Ping all connected clients, show current player ping on debug panel
+* View Player list by pressing "tab"
 
 Online working demo app: [http://mangonel.nodejitsu.com/](http://mangonel.nodejitsu.com/)
 
 TODOs:
 
-* View player list
 * Viewport
 * Collisions with map bounds and other players
 * Canvas click

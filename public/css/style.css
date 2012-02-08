@@ -1,8 +1,9 @@
 body {
-  padding: 30px 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: #DCECEC;
   color: #333;
+  margin: 0;
+  padding: 0;
 }
 
 a {
@@ -11,6 +12,10 @@ a {
 
 .clearer {
 	clear: both;
+}
+
+#wrapper {
+	padding: 30px 50px;
 }
 
 h1 {
@@ -40,4 +45,33 @@ h1 {
 
 #canvas {
 	background-color: #CCC;
+}
+
+#scoreboard {
+	display: none;
+	position: absolute;
+	top: 30px;
+	left: 50%;
+	width: 90%;
+	height: 80%;
+	margin: 0 auto;
+	margin-left: -45%;
+	padding: 20px 0;
+	text-align: center;
+	background: rgba(0, 0, 0, .8);
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 0px 3px 0px 0px rgba(0, 16, 34, .4);
+	-moz-box-shadow: 0px 3px 0px 0px rgba(0, 16, 34, .4);
+	box-shadow: 0px 3px 0px 0px rgb(0, 16, 34, .4);
+}
+
+#scoreboard ul {
+	font: 18px "Lucida Grande", Helvetica, Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	color: #FFFFFF;
+	list-style-type: none;
+	overflow: auto;
 }
