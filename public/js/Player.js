@@ -24,7 +24,7 @@
 	};
 
 	Player.prototype.toString = function() { 
-		return /*this.id +' '+ */this.nick +' '+ this.x +':'+ this.y + this.ping +'ms';
+		return /*this.id +' '+ */this.nick +' '+ this.x +':'+ this.y +' '+ this.ping +'ms';
 	};
 
 	Player.prototype.draw = function(ctx) {
