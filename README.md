@@ -25,13 +25,14 @@ It provides:
 * Show FPS on debug panel
 * Ping all connected clients, show current player ping on debug panel
 * View Player list by pressing "tab"
+* Collisions with map bounds
 
 Online working demo app: [http://mangonel.nodejitsu.com/](http://mangonel.nodejitsu.com/)
 
 TODOs:
 
 * Viewport
-* Collisions with map bounds and other players
+* Collisions with other players
 * Canvas click
 * Websocket message enumeration
 * Tileset engine (maybe)

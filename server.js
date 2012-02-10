@@ -54,9 +54,11 @@ io.configure(function() {
 
 var serverConfig = {
 	maxPlayers: 32,
-	speed: 10,
+	speed: 20,
 	spawnX: 100,	
-	spawnY: 100
+	spawnY: 100,
+	mapWidth: 512,
+	mapHeight: 512
 };
 
 function getPlayerFromId(id) {
@@ -83,46 +85,76 @@ function sendPlayerList(client) {
 	console.log('* Sent player list to '+ client.id);
 }
 
+// Check if coords + size is inside map
+// use (x, y, 1, 1) for a point
+function checkMapBounds(x, y, width, height) {
+	var safeX = x,
+		safeY = y;
+
+	if (x < 0) {
+		safeX = 0;
+	} else if ((x + width) > serverConfig.mapWidth) {
+		safeX = serverConfig.mapWidth - width;
+	}
+
+	if (y < 0) {
+		safeY = 0;
+	} else if ((y + height) > serverConfig.mapHeight) {
+		safeY = serverConfig.mapHeight - height;
+	}
+
+	return {
+		x: safeX,
+		y: safeY
+	};
+}
+
 // Elaborate next position, send confirmed position to client 
-function sendGameData(client, data) { //TODO: Do bounds and anticheat checks
-	var nextX,
-		nextY,
-		oldX,
-		oldY;
+function sendGameData(client, data) {
+	var oldMove = {},
+		nextMove = {},
+		safeMove = {};
 
 	var length = players.length;
 	for(var i = 0; i < length; i++) {
-		if (players[i].id == data.id) {
+		if (players[i].id == data.id) { // find the player we're referring to
 
-			oldX = players[i].x;
-			oldY = players[i].y;
+			oldMove.x = players[i].x;
+			oldMove.y = players[i].y;
 			
-			switch(data.dir) {
+			switch(data.dir) { // calculate player's next position
 				case 'l':
-						nextX = oldX - serverConfig.speed;
-						nextY = oldY;
+						nextMove.x = oldMove.x - serverConfig.speed;
+						nextMove.y = oldMove.y;
 					break;
 				case 'r':
-						nextX = oldX + serverConfig.speed;
-						nextY = oldY;
+						nextMove.x = oldMove.x + serverConfig.speed;
+						nextMove.y = oldMove.y;
 					break;
 				case 'u':
-						nextX = oldX;
-						nextY = oldY - serverConfig.speed;
+						nextMove.x = oldMove.x;
+						nextMove.y = oldMove.y - serverConfig.speed;
 					break;
 				case 'd':
-						nextX = oldX;
-						nextY = oldY + serverConfig.speed;
+						nextMove.x = oldMove.x;
+						nextMove.y = oldMove.y + serverConfig.speed;
 					break;
 
 				default:
 					break;
 			}
 
-			players[i].x = nextX;
-			players[i].y = nextY;
+			// Check if he's going out of bounds
+			// if so set him to a safe position on the edge
+			safeMove = checkMapBounds(nextMove.x, nextMove.y, players[i].width, players[i].height)
+			nextMove.x = safeMove.x;
+			nextMove.y = safeMove.y;
 
-			io.sockets.emit('play', { id: players[i].id , x: nextX, y: nextY });
+			//update data structure with safe position and broadcast it
+			players[i].x = nextMove.x;
+			players[i].y = nextMove.y;
+
+			io.sockets.emit('play', { id: players[i].id , x: nextMove.x, y: nextMove.y });
 			break;
 		}
 	}	
