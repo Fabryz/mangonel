@@ -27,10 +27,6 @@
 		return /*this.id +' '+ */this.nick +' '+ this.x +':'+ this.y +' '+ this.ping +'ms';
 	};
 
-	Player.prototype.draw = function(ctx) {
-		ctx.fillRect(this.x, this.y, this.width, this.height);
-	};
-
 	Player.prototype.hasMoved = function() {
 		this.moved = (this.moveLeft || this.moveRight || this.moveUp || this.moveDown);
 			
