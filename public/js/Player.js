@@ -8,7 +8,7 @@
 		
 		this.isAlive = true;
 		this.HP = 100;
-		this.lastMove = Date.now();
+		this.lastMoveTime = Date.now();
 		this.ping = 0;
 		
 		this.width = 10;
@@ -21,6 +21,7 @@
 		this.moveRight = false;
 		this.moveUp = false;
 		this.moveDown = false;
+		this.lastMoveDir = 'd';
 	};
 
 	Player.prototype.toString = function() { 
