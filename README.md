@@ -26,16 +26,17 @@ It provides:
 * Ping all connected clients, show current player ping on debug panel
 * View Player list by pressing "tab"
 * Collisions with map bounds
+* Viewport: have a big map, render only a small viewport and center player on canvas
 
 Online working demo app: [http://mangonel.nodejitsu.com/](http://mangonel.nodejitsu.com/)
 
 TODOs:
 
-* Viewport
 * Collisions with other players
 * Canvas click
 * Websocket message enumeration
 * Tileset engine (maybe)
+* Client / Server configurations
 
 Requirements
 ------------
