@@ -32,11 +32,15 @@ Online working demo app: [http://mangonel.nodejitsu.com/](http://mangonel.nodeji
 
 TODOs:
 
+* Render only viewable objects
+* Player sprites
+* Client / Server configurations
 * Collisions with other players
 * Canvas click
 * Websocket message enumeration
 * Tileset engine (maybe)
-* Client / Server configurations
+* Audio
+* Sprite animations
 
 Requirements
 ------------
