@@ -188,7 +188,18 @@
 				x: x - vpCoords.x,
 				y: y - vpCoords.y
 			};
-		}
+		};
+
+
+		drawMapBounds = function() {
+			var coords = mapToVp(0, 0);
+
+			ctx.save()
+			ctx.strokeStyle = "#AAA";
+			ctx.lineWidth = 8;
+			ctx.strokeRect(coords.x - 4, coords.y - 4, canvasWidth + 8, canvasHeight + 8);
+			ctx.restore();
+		};
 
 		var drawPlayer = function(p) {
 			var coords = mapToVp(p.x, p.y);
@@ -204,6 +215,7 @@
 
 				vp.setCenter(player.x, player.y);
 
+				drawMapBounds();
 				drawPlayer(player);
 
 				var length = players.length;
