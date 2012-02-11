@@ -172,10 +172,12 @@
 					dir = 'd';
 				}
 
+				player.lastMoveDir = dir;
+
 				nowMove = Date.now();
-				if ((nowMove - player.lastMove) > allowSendEvery) { 
+				if ((nowMove - player.lastMoveTime) > allowSendEvery) { 
 					socket.emit('play', { id: player.id, dir: dir });
-					player.lastMove = Date.now();
+					player.lastMoveTime = Date.now();
 				}
 			}
 		};
@@ -204,7 +206,40 @@
 		var drawPlayer = function(p) {
 			var coords = mapToVp(p.x, p.y);
 
-			ctx.fillRect(coords.x, coords.y, p.width, p.height);
+			ctx.save();
+
+			ctx.translate(coords.x + (p.width / 2), coords.y + (p.height / 2));
+			ctx.beginPath();
+
+			switch(p.lastMoveDir) {
+				case 'l':
+						ctx.moveTo(0, 5);
+						ctx.lineTo(0, -5);
+						ctx.lineTo(-5, 0);
+					break;
+				case 'r':
+						ctx.moveTo(0, 5);
+						ctx.lineTo(0, -5);
+						ctx.lineTo(5, 0);
+					break;
+				case 'u':
+						ctx.moveTo(-5, 0);
+						ctx.lineTo(5, 0);
+						ctx.lineTo(0, -5);
+					break;
+				case 'd':
+						ctx.moveTo(-5, 0);
+						ctx.lineTo(5, 0);
+						ctx.lineTo(0, 5);
+					break;
+			}
+
+			ctx.closePath();
+			ctx.fill();
+
+			ctx.restore();
+
+			//ctx.fillRect(coords.x, coords.y, p.width, p.height);
 		};
 
 		var loop = function() {
