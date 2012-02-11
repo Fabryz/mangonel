@@ -22,13 +22,13 @@
 				d : 68,
 				backslash : 220
 			};
-		
+
 		var player = new Player(),
 			players = [];
 
 		var fps = new Fps(2000),
 			socket = new io.connect(window.location.href);
-		
+
 		var canvas = $('#canvas'),
 			ctx = canvas.get(0).getContext("2d"),
 			canvasWidth = canvas.width(),
@@ -36,7 +36,9 @@
 
 		ctx.fillStyle = 'rgb(0, 0, 0)';
 		ctx.font = "15px Monospace";
-	
+
+		var vp = new Viewport(canvasWidth, canvasHeight);
+
 		var debug = function(msg) {
 			console.log(msg);
 		};
@@ -150,27 +152,7 @@
 			}
 		};
 
-		var loop = function() {
-			ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-			
-			if (isPlaying) {			
-				sendMovement();
-
-				player.draw(ctx);
-
-				var length = players.length;
-				for(var i = 0; i < length; i++) {
-					if (players[i].id != player.id) {
-						players[i].draw(ctx);
-			    	}
-				}
-				
-				fps.count++;
-
-				requestAnimationFrame(loop);
-			}
-		}
-
+		// send a movement every allowSendEvery milliseconds
 		var sendMovement = function() {
 			var nowMove;
 
@@ -197,6 +179,46 @@
 				}
 			}
 		};
+
+		// Convert map coordinates to viewport coordinates
+		var mapToVp = function(x, y) {
+			var vpCoords = vp.getCenter();
+
+			return {
+				x: x - vpCoords.x,
+				y: y - vpCoords.y
+			};
+		}
+
+		var drawPlayer = function(p) {
+			var coords = mapToVp(p.x, p.y);
+
+			ctx.fillRect(coords.x, coords.y, p.width, p.height);
+		};
+
+		var loop = function() {
+			ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+			
+			if (isPlaying) {			
+				sendMovement();
+
+				vp.setCenter(player.x, player.y);
+
+				drawPlayer(player);
+
+				var length = players.length;
+				for(var i = 0; i < length; i++) {
+					if (players[i].id != player.id) {
+						drawPlayer(players[i]);
+			    	}
+				}
+				
+				fps.count++;
+
+				requestAnimationFrame(loop);
+				//setTimeout(loop, desiredFPS); //debug
+			}
+		}
 
 		socket.on('join', function(data) {						
 			player.id = data.player.id;
