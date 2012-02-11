@@ -15,7 +15,9 @@ a {
 }
 
 #wrapper {
-	padding: 30px 50px;
+	padding: 0;
+	padding-top: 30px;
+	padding-left: 50px;
 }
 
 h1 {
