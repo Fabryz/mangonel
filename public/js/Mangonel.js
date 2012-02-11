@@ -298,6 +298,7 @@
 			newPlayer.nick = data.player.nick;
 			newPlayer.x = data.player.x;
 			newPlayer.y = data.player.y;
+			newPlayer.lastMoveDir = data.player.lastMoveDir;
 		
 			players.push(newPlayer);
 			debug('New player joined: '+ newPlayer.nick);
@@ -314,6 +315,7 @@
 				tmpPlayer.nick = data.list[i].nick;
 				tmpPlayer.x = data.list[i].x;
 				tmpPlayer.y = data.list[i].y;
+				tmpPlayer.lastMoveDir = data.list[i].lastMoveDir;
 				tmpPlayer.ping = data.list[i].ping;
 				
 				players.push(tmpPlayer);
@@ -329,9 +331,11 @@
 				if (players[i].id == data.id) {
 					players[i].x = data.x;
 					players[i].y = data.y;
+					players[i].lastMoveDir = data.dir;
 					if (player.id == data.id) {
 						player.x = data.x;
 						player.y = data.y;
+						player.lastMoveDir = data.dir;
 					}
 				}
 			}

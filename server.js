@@ -81,7 +81,7 @@ function newPlayer(client) {
 }
 
 function sendPlayerList(client) {
-	client.emit('playerlist', { list: players });
+	client.emit('playerlist', { list: players }); //FIXME improve me
 	console.log('* Sent player list to '+ client.id);
 }
 
@@ -154,7 +154,7 @@ function sendGameData(client, data) {
 			players[i].x = nextMove.x;
 			players[i].y = nextMove.y;
 
-			io.sockets.emit('play', { id: players[i].id , x: nextMove.x, y: nextMove.y });
+			io.sockets.emit('play', { id: players[i].id , x: nextMove.x, y: nextMove.y, dir: data.dir });
 			break;
 		}
 	}	
