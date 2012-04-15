@@ -14,12 +14,12 @@ $(document).ready(function() {
 	*/
 	    
     Game.socket.on('connect', function() {
-    	Game.debug('Connected.');
+    	Game.log('Connected.');
     	Game.start();
 	});
 			
 	Game.socket.on('disconnect', function() {
-		Game.debug('Disconnected.');
+		Game.log('Disconnected.');
 		Game.stop();
 	});
 	

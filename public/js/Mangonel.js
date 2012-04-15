@@ -39,13 +39,13 @@
 
 		var vp = new Viewport(canvasWidth, canvasHeight);
 
-		var debug = function(msg) {
-			console.log(msg);
+		var log = function(msg) {
+			console.log(new Date().toJSON() +": "+ msg);
 		};
 
 		var stop = function() {
 			isPlaying = false;
-			debug('* Mangonel stopped.');
+			log('* Mangonel stopped.');
 		};
 
 		var toggleDebugPanel = function(spd) {
@@ -77,7 +77,7 @@
 
 		var start = function() {
 			if (isReady) {
-				debug('* Mangonel started.');
+				log('* Mangonel started.');
 				isPlaying = true;
 				
 				$(window).keydown(function(e) {
@@ -148,7 +148,7 @@
 
 				loop();
 			} else {
-				debug('* Mangonel not ready.');
+				log('* Mangonel not ready.');
 			}
 		};
 
@@ -273,8 +273,8 @@
 			player.x = data.player.x;
 			player.y = data.player.y;
 			
-			debug('Received current player id: '+ player.id);
-			debug('You have joined the server.');
+			log('Received current player id: '+ player.id);
+			log('You have joined the server.');
 		});
 
 		socket.on('quit', function(data) {
@@ -289,7 +289,7 @@
 				}
 			}
 			
-			debug('Player quitted: '+ quitter +' (id '+ data.id +')');
+			log('Player quitted: '+ quitter +' (id '+ data.id +')');
 		});
 
 		socket.on('newplayer', function(data) {	
@@ -301,7 +301,7 @@
 			newPlayer.lastMoveDir = data.player.lastMoveDir;
 		
 			players.push(newPlayer);
-			debug('New player joined: '+ newPlayer.nick);
+			log('New player joined: '+ newPlayer.nick);
 			tmpPlayer = {};
 		});
 		
@@ -322,7 +322,7 @@
 				tmpPlayer = {};
 			}
 
-			debug('Initial player list received: '+ length +' players.');	
+			log('Initial player list received: '+ length +' players.');	
 		});
 
 		socket.on('play', function(data) {
@@ -343,7 +343,7 @@
 
 		socket.on('ping', function(data) {
 			socket.emit('pong', { time: Date.now() });
-			//debug('Ping? Pong!');
+			//log('Ping? Pong!');
 		});
 		
 		socket.on('pingupdate', function(data) {
@@ -374,7 +374,7 @@
 			canvasWidth: canvasWidth,
 			canvasHeight: canvasHeight,
 
-			debug: debug,
+			log: log,
 			start: start,
 			stop: stop,
 			loop: loop,
