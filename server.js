@@ -68,6 +68,7 @@ function getPlayerFromId(id) {
 			return players[i];
 		}
 	}
+	return null;
 }
 
 function newPlayer(client) {
