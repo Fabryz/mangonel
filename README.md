@@ -1,5 +1,5 @@
 Mangonel
-======
+========
 
 Default HTML5 Canvas 2D + Node.js + Express.js + Socket.IO game project template (boilerplate?)
 
@@ -54,7 +54,7 @@ Modules:
 * [Socket.io](http://socket.io/)
 
 Installation
-----------
+------------
 
 1. Clone the repository with ``git clone git://github.com/Fabryz/mangonel.git YOUR_PROJECT_NAME``
 2. Install dependencies with ``npm install``
@@ -67,7 +67,7 @@ License
 
 MIT License
 
-Copyright (c) 2012 Fabrizio Codello
+Copyright (c) 2013 Fabrizio Codello
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
