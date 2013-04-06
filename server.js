@@ -3,59 +3,65 @@
 */
 
 var express = require('express'),
-	app = module.exports = express.createServer();
+	socketio = require('socket.io'),
+	http = require('http'),
+    path = require('path');
+
+var app = express();
 
 // Configuration
 
 app.configure(function(){
+	app.set('port', process.env.PORT || 8080);
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
+	app.use(express.favicon());
+	app.use(express.logger('short'));
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(app.router);
-	app.use(express.static(__dirname + '/public'));
-	app.use(express.logger(':remote-addr - :method :url HTTP/:http-version :status :res[content-length] - :response-time ms'));
-	app.use(express.favicon());
+	app.use(express.static(path.join(__dirname, 'public')));
 });
 
 app.configure('development', function(){
-	app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
 app.configure('production', function(){
-	app.use(express.errorHandler()); 
+	app.use(express.errorHandler());
 });
 
 // Routes
 
-app.get('/',  function(req, res) {
-	res.sendfile('index.html');
-});
+// app.get('/', function(req, res) {
+//  res.sendfile('public/index.html');
+// });
 
-app.listen(8080);
-console.log("* Express server listening in %s mode", app.settings.env);
+var server = http.createServer(app).listen(app.get('port'), function(){
+  console.log("Express server listening on port "+ app.get('port') +" in "+ app.get('env') +" mode.");
+});
 
 /*
 * Socket.IO
 */
 
-var	io = require('socket.io').listen(app),
+var	io = socketio.listen(server),
 	Player = require('./public/js/Player.js').Player,
 	players = [],
- 	totPlayers = 0,
- 	pings = [],
- 	pingInterval = null,
- 	pingEvery = 5000;
-	
-io.configure(function() { 
+	totPlayers = 0,
+	pings = [],
+	pingInterval = null,
+	pingEvery = 5000;
+
+io.configure(function() {
 	io.enable('browser client minification');
-	io.set('log level', 1); 
-}); 
+	io.set('log level', 1);
+});
 
 var serverConfig = {
 	maxPlayers: 32,
 	speed: 20,
-	spawnX: 100,	
+	spawnX: 100,
 	spawnY: 100,
 	mapWidth: 512,
 	mapHeight: 512
@@ -63,7 +69,7 @@ var serverConfig = {
 
 function getPlayerFromId(id) {
 	var length = players.length;
-	for(var i = 0; i < length; i++) { 
+	for(var i = 0; i < length; i++) {
 		if (players[i].id == id) {
 			return players[i];
 		}
@@ -74,10 +80,10 @@ function getPlayerFromId(id) {
 function newPlayer(client) {
 	p = new Player(client.id, serverConfig.spawnX, serverConfig.spawnY);
 	players.push(p);
-	
+
     client.emit('join', { player: p });
 	client.broadcast.emit('newplayer', { player: p });
-	
+
 	console.log('+ New player: '+ p.nick);
 }
 
@@ -110,7 +116,7 @@ function checkMapBounds(x, y, width, height) {
 	};
 }
 
-// Elaborate next position, send confirmed position to client 
+// Elaborate next position, send confirmed position to client
 function sendGameData(client, data) {
 	var oldMove = {},
 		nextMove = {},
@@ -122,7 +128,7 @@ function sendGameData(client, data) {
 
 			oldMove.x = players[i].x;
 			oldMove.y = players[i].y;
-			
+
 			switch(data.dir) { // calculate player's next position
 				case 'l':
 						nextMove.x = oldMove.x - serverConfig.speed;
@@ -158,10 +164,10 @@ function sendGameData(client, data) {
 			io.sockets.emit('play', { id: players[i].id , x: nextMove.x, y: nextMove.y, dir: data.dir });
 			break;
 		}
-	}	
+	}
 }
 
-// ping is intended as server -> client -> server time	
+// ping is intended as server -> client -> server time
 function pingClients() {
 	var length = players.length;
 	for(var i = 0; i < length; i++) {
@@ -174,7 +180,7 @@ function pingClients() {
 }
 
 var game = io.sockets.on('connection', function(client) {
-	newPlayer(client);	
+	newPlayer(client);
 	sendPlayerList(client);
 
 	totPlayers++;
@@ -192,7 +198,7 @@ var game = io.sockets.on('connection', function(client) {
 		sendGameData(client, data);
 	});
 
-	client.on('pong', function(data) {		
+	client.on('pong', function(data) {
 		pings[client.id] = { ping: (Date.now() - pings[client.id].time) };
 
 		var length = players.length;
@@ -211,7 +217,7 @@ var game = io.sockets.on('connection', function(client) {
 
 	client.on('disconnect', function() {
 		var quitter = '';
-		
+
 		var length = players.length;
 		for(var i = 0; i < length; i++) {
 			if (players[i].id == client.id) {

@@ -1,13 +1,25 @@
 {
   "name": "mangonel",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "author": "Fabrizio Codello",
   "engines": {
     "node": "0.6.x"
   },
-  "private": true,
   "dependencies": {
-    "express": "2.5.x",
+    "express": "3.1.x",
     "socket.io": "0.9.x"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fabryz/mangonel.git"
+  },
+  "keywords": [
+    "socket.io",
+    "realtime",
+    "canvas",
+    "gamedev",
+    "html5"
+  ],
+  "private": true,
+  "license": "MIT"
 }
