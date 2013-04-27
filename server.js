@@ -153,7 +153,7 @@ function sendGameData(client, data) {
 
 			// Check if he's going out of bounds
 			// if so set him to a safe position on the edge
-			safeMove = checkMapBounds(nextMove.x, nextMove.y, players[i].width, players[i].height)
+			safeMove = checkMapBounds(nextMove.x, nextMove.y, players[i].width, players[i].height);
 			nextMove.x = safeMove.x;
 			nextMove.y = safeMove.y;
 
@@ -232,7 +232,7 @@ var game = io.sockets.on('connection', function(client) {
 		io.sockets.emit('tot', { tot: totPlayers });
 		console.log('- Player '+ quitter +' ('+ client.id +') disconnected, total players: '+ totPlayers);
 
-		if (totPlayers == 0) {
+		if (totPlayers === 0) {
 			clearTimeout(pingInterval);
 			pingInterval = null;
 		}
