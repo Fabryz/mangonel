@@ -1,0 +1,5 @@
+- space shooter demo
+	- server side projectile management
+  - projectile synch
+  - projectile owner
+  - health synch / respawn
