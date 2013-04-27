@@ -26,6 +26,9 @@
 
 		var vp = new Viewport(canvasWidth, canvasHeight);
 
+		var gameBg = new Image();
+			gameBg.src = '/img/starfield.png';
+
 		var debug = function(msg) {
 			console.log(msg);
 		};
@@ -188,13 +191,23 @@
 		};
 
 
-		drawMapBounds = function() {
+		var drawMapBounds = function() {
 			var coords = mapToVp(0, 0);
 
 			ctx.save();
 			ctx.strokeStyle = "#AAA";
 			ctx.lineWidth = 8;
 			ctx.strokeRect(coords.x - 4, coords.y - 4, canvasWidth + 8, canvasHeight + 8);
+			ctx.restore();
+		};
+
+		drawMapBG = function() {
+			var coords = mapToVp(- canvasWidth / 2, - canvasHeight / 2);
+
+			ctx.save();
+			// gameBg.onload = function() {
+				ctx.drawImage(gameBg, coords.x , coords.y);
+			// };
 			ctx.restore();
 		};
 
@@ -205,6 +218,7 @@
 
 			ctx.translate(coords.x + (p.width / 2), coords.y + (p.height / 2));
 			ctx.beginPath();
+			ctx.fillStyle = "#FFF";
 
 			switch(p.lastMoveDir) {
 				case 'l':
@@ -245,6 +259,7 @@
 
 				vp.setCenter(player.x, player.y);
 
+				drawMapBG();
 				drawMapBounds();
 				drawPlayer(player);
 
