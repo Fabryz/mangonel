@@ -255,13 +255,9 @@
 		};
 
 		socket.on('join', function(data) {
-			player.id = data.player.id;
-			player.nick = data.player.nick;
-			player.x = data.player.x;
-			player.y = data.player.y;
+			jQuery.extend(true, player, data.player);
 
-			debug('Received current player id: '+ player.id);
-			debug('You have joined the server.');
+			debug('You have joined the server. (id: '+ player.id +').');
 		});
 
 		socket.on('quit', function(data) {
@@ -276,20 +272,16 @@
 				}
 			}
 
-			debug('Player quitted: '+ quitter +' (id '+ data.id +')');
+			debug('< Player quitted: '+ quitter +' (id '+ data.id +')');
 		});
 
 		socket.on('newplayer', function(data) {
 			var newPlayer = new Player();
-			newPlayer.id = data.player.id;
-			newPlayer.nick = data.player.nick;
-			newPlayer.x = data.player.x;
-			newPlayer.y = data.player.y;
-			newPlayer.lastMoveDir = data.player.lastMoveDir;
-
+			jQuery.extend(true, newPlayer, data.player);
 			players.push(newPlayer);
-			debug('New player joined: '+ newPlayer.nick);
-			tmpPlayer = {};
+
+			debug('> New player joined: '+ newPlayer.nick +' (id: '+ newPlayer.id +').');
+			newPlayer = {};
 		});
 
 		socket.on('playerlist', function(data) {
@@ -298,12 +290,7 @@
 			var length = data.list.length;
 			for(var i = 0; i < length; i++) {
 				var tmpPlayer = new Player();
-				tmpPlayer.id = data.list[i].id;
-				tmpPlayer.nick = data.list[i].nick;
-				tmpPlayer.x = data.list[i].x;
-				tmpPlayer.y = data.list[i].y;
-				tmpPlayer.lastMoveDir = data.list[i].lastMoveDir;
-				tmpPlayer.ping = data.list[i].ping;
+				jQuery.extend(true, tmpPlayer, data.list[i]);
 
 				players.push(tmpPlayer);
 				tmpPlayer = {};
