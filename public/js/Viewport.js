@@ -23,7 +23,7 @@ var Viewport = function(width, height) {
 			((_y >= -_rangeY) && (_y < _height + _rangeY))) {
 			return true;
 		}
-		
+
 		return false;
 	};
 
@@ -42,7 +42,7 @@ var Viewport = function(width, height) {
 
 	// Resize viewport to given size
 	// Useful when resizing a full screen viewport
-	setSize = function(width, height) {
+	setSize = function(_width, _height) {
 		width = _width;
 		height = _height;
 	};
