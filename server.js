@@ -61,8 +61,12 @@ io.configure(function() {
 var serverConfig = {
 	maxPlayers: 32,
 	speed: 20,
-	spawnX: 100,
-	spawnY: 100,
+	spawns: [
+		{ id: 0, name: 'spawnOne', spawnX: 100, spawnY: 100 },
+		{ id: 1, name: 'spawnTwo', spawnX: 412, spawnY: 100 },
+		{ id: 2, name: 'spawnThree', spawnX: 100, spawnY: 412 },
+		{ id: 3, name: 'spawnFour', spawnX: 412, spawnY: 412 }
+	],
 	mapWidth: 512,
 	mapHeight: 512
 };
@@ -77,8 +81,16 @@ function getPlayerFromId(id) {
 	return null;
 }
 
+function getRandomSpawn() {
+	var random = Math.floor(Math.random() * serverConfig.spawns.length);
+
+	return serverConfig.spawns[random];
+}
+
 function newPlayer(client) {
-	p = new Player(client.id, serverConfig.spawnX, serverConfig.spawnY);
+	var randomSpawn = getRandomSpawn();
+
+	p = new Player(client.id, randomSpawn.spawnX, randomSpawn.spawnY);
 	players.push(p);
 
     client.emit('join', { player: p });
