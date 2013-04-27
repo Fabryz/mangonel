@@ -72,15 +72,19 @@
 
 					switch(e.keyCode) {
 						case keyboard.left_arrow:
+						case keyboard.a:
 								player.moveLeft = true;
 							break;
 						case keyboard.right_arrow:
+						case keyboard.d:
 								player.moveRight = true;
 							break;
 						case keyboard.up_arrow:
+						case keyboard.w:
 								player.moveUp = true;
 							break;
 						case keyboard.down_arrow:
+						case keyboard.s:
 								player.moveDown = true;
 							break;
 
@@ -106,15 +110,19 @@
 
 					switch(e.keyCode) {
 						case keyboard.left_arrow:
+						case keyboard.a:
 								player.moveLeft = false;
 							break;
 						case keyboard.right_arrow:
+						case keyboard.d:
 								player.moveRight = false;
 							break;
 						case keyboard.up_arrow:
+						case keyboard.w:
 								player.moveUp = false;
 							break;
 						case keyboard.down_arrow:
+						case keyboard.s:
 								player.moveDown = false;
 							break;
 
