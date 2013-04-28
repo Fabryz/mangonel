@@ -441,6 +441,8 @@
 
 				var length = players.length;
 				for(var i = 0; i < length; i++) {
+					var coords = mapToVp(players[i].x, players[i].y);
+					ctx.fillText(players[i].HP, coords.x + players[i].centerX, coords.y + players[i].centerY - 20); // debug
 					if (players[i].id != player.id) {
 						drawPlayer(players[i]);
 					}
