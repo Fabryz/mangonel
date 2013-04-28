@@ -41,7 +41,6 @@
 			mouseY,
 			mouseSize = 10,
 			mousePressed = false,
-			lastShot = Date.now(),
 			allowed = 100;
 
 		function calcDistance(point1, point2) {
@@ -63,13 +62,14 @@
 
 		function shootProjectile() {
 			var nowShot = Date.now();
-			if (nowShot - lastShot > allowed) {
+			if (nowShot - player.lastShotAt > allowed) {
 				var coords = mapToVp(player.x, player.y);
 				var vangle = calcAngle({ x: coords.x + player.centerX, y: coords.y + player.centerY }, { x: mouseX, y: mouseY });
 				var projectile = new Projectile(player.x + player.centerX, player.y + player.centerY, vangle);
-				projectiles.push(projectile);
+				// projectiles.push(projectile);
+				socket.emit('projectile', { projectile: projectile });
 
-				lastShot = Date.now();
+				player.lastShotAt = Date.now();
 			}
 		}
 
@@ -179,7 +179,7 @@
 			return (actor.HP > 0 ? true : false);
 		}
 
-		function checkCollisions(enemy) {
+		function checkProjectileCollisions(enemy) {
 			projectiles = $.map(projectiles, function(p) {
 				if (((p.x + p.centerX >= enemy.x) && (p.x + p.centerX <= enemy.x + enemy.width)) &&
 					((p.y + p.centerY >= enemy.y) && (p.y + p.centerY <= enemy.y + enemy.height))) {
@@ -429,13 +429,12 @@
 
 				updateProjectiles();
 
-
-				var length = players.length;
-				for(var i = 0; i < length; i++) {
-					if (players[i].id != player.id) {
-						checkCollisions(players[i]);
-					}
-				}
+				// var length = players.length;
+				// for(var i = 0; i < length; i++) {
+				// 	if (players[i].id != player.id) {
+				// 		checkProjectileCollisions(players[i]);
+				// 	}
+				// }
 
 				drawPlayer(player);
 
@@ -513,6 +512,34 @@
 						player.x = data.x;
 						player.y = data.y;
 						player.lastMoveDir = data.dir;
+					}
+				}
+			}
+		});
+
+		socket.on('projectile', function(data) {
+			// debug('arrived projectile '+ JSON.stringify(data));
+
+			var length = projectiles.length;
+			for(var i = 0; i < length; i++) {
+				if (projectiles[i].id == data.id) {
+					projectiles.splice(i, 1);
+					break;
+				}
+			}
+
+			projectiles.push(data.projectile);
+		});
+
+		socket.on('updatePlayerField', function(data) {
+			console.log(data);
+
+			var length = players.length;
+			for(var i = 0; i < length; i++) {
+				if (players[i].id == data.player.id) {
+					players[i][data.field] = data.newValue;
+					if (player.id == data.player.id) {
+						player[data.field] = data.newValue;
 					}
 				}
 			}

@@ -51,7 +51,12 @@ var	io = socketio.listen(server),
 	totPlayers = 0,
 	pings = [],
 	pingInterval = null,
-	pingEvery = 5000;
+	pingEvery = 5000,
+	projectiles = [],
+	projectile_damage = 12,
+	projectile_dtl = 200,
+	tick = 0,
+	tickInterval = 0;
 
 io.configure(function() {
 	io.enable('browser client minification');
@@ -191,6 +196,98 @@ function pingClients() {
 	}
 }
 
+// update a precise field of a player
+function updatePlayerField(player, field, newValue) {
+
+	console.log(player.id, field, newValue);
+
+	io.sockets.emit('updatePlayerField', { player: player.id, field: field, newValue: newValue });
+}
+
+function checkProjectileCollisions() {
+	var length = players.length;
+	for(var i = 0; i < length; i++) {
+		projectiles.map(function(p) {
+			if (((p.x + p.centerX >= players[i].x) && (p.x + p.centerX <= players[i].x + players[i].width)) &&
+				((p.y + p.centerY >= players[i].y) && (p.y + p.centerY <= players[i].y + players[i].height))) {
+				// players[i].HP -= projectile_damage;
+
+				// updatePlayerField(players[i], 'HP', players[i].HP);
+			} else {
+				return p;
+			}
+		});
+	}
+}
+
+function sendProjectile(projectile) {
+	io.sockets.emit('projectile', { projectile: projectile });
+}
+
+function updateProjectile(client, data) {
+	data.projectile.owner = client.id; // Setting projectile owner server side
+
+	projectiles.push(data.projectile);
+
+	var length = players.length;
+	for(var i = 0; i < length; i++) {
+		if (players[i].id == data.projectile.owner) {
+			players[i].lastShotAt = Date.now();
+		}
+	}
+
+	checkProjectileCollisions();
+
+	sendProjectile(data.projectile);
+}
+
+function updateProjectilesMapBounds() {
+	//remove projectiles outside canvas
+	projectiles.map(function(p) {
+		if ((p.x + p.centerX >= 0) && (p.x + p.centerX < serverConfig.mapWidth) &&
+			(p.y + p.centerY >= 0) && (p.y + p.centerY < serverConfig.mapHeight)) {
+			return p;
+		}
+	});
+}
+
+function updateProjectilesDtl() {
+	//remove projectiles farer than distance to live
+	projectiles.map(function(p) {
+		if (p.dtl <= projectile_dtl) {
+			return p;
+		}
+	});
+}
+
+function updateProjectiles() {
+	var length = projectiles.length;
+	for(var i = 0; i < length; i++) {
+		var stepX = Math.cos(projectiles[i].angle) * projectile_speed;
+		var stepY = Math.sin(projectiles[i].angle) * projectile_speed;
+		projectiles[i].x += stepX;
+		projectiles[i].y += stepY;
+		projectiles[i].dtl += Math.sqrt(stepX * stepX + stepY * stepY);
+		// ctx.fillText(projectiles[i].dtl, 10, 50);
+	}
+
+	updateProjectilesDtl();
+	updateProjectilesMapBounds();
+
+	sendProjectiles();
+}
+
+function sendProjectiles() {
+	var length = projectiles.length;
+	for(var i = 0; i < length; i++) {
+		sendProjectiles(projectiles[i]);
+	}
+}
+
+function serverLoop() {
+	updateProjectiles();
+}
+
 var game = io.sockets.on('connection', function(client) {
 	newPlayer(client);
 	sendPlayerList(client);
@@ -204,10 +301,18 @@ var game = io.sockets.on('connection', function(client) {
 	if ((totPlayers == 1) && (pingInterval === null)) {
 		pingInterval = setInterval(pingClients, pingEvery);
 	}
+	if ((totPlayers == 1) && (tickInterval === null)) {
+		tickInterval = setInterval(serverLoop, 100);
+	}
 
 	client.on('play', function(data) {
 		//console.dir(data);
 		sendGameData(client, data);
+	});
+
+	client.on('projectile', function(data) {
+		//console.dir(data);
+		updateProjectile(client, data);
 	});
 
 	client.on('pong', function(data) {
@@ -247,6 +352,8 @@ var game = io.sockets.on('connection', function(client) {
 		if (totPlayers === 0) {
 			clearTimeout(pingInterval);
 			pingInterval = null;
+			clearTimeout(tickInterval);
+			tickInterval = null;
 		}
 	});
 });

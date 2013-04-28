@@ -1,13 +1,15 @@
 (function(exports) {
 
 	var Projectile = function(x, y, angle, owner) {
-		this.owner = owner || null;
         this.x = x || 0;
         this.y = y || 0;
         this.angle = angle || 0;
         this.angularVelocity = 0;
-
         this.dtl = 0;
+
+        this.owner = owner || null;
+        this.createdAt = Date.now();
+        this.id = this.owner + this.createdAt;
 
         this.width = 10;
         this.height = 5;

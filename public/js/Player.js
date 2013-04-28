@@ -10,6 +10,7 @@
 		this.HP = 100;
 		this.lastMoveTime = Date.now();
 		this.ping = 0;
+		this.lastShotAt = Date.now(),
 
 		this.width = 10;
 		this.height = 10;
