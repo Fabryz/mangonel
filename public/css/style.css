@@ -48,6 +48,9 @@ h1 {
 #canvas {
 	background-color: #CCC;
 }
+#canvas:hover {
+	cursor: default;
+}
 
 #scoreboard {
 	display: none;
