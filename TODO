@@ -5,3 +5,29 @@
   - health synch / respawn
 
 - remove / fix (click+drag out of canvas) countinuous fire
+
+- diagonal movements
+!- draw something only if it's actually visible (in the current viewport)
+
+- restore starlight bg
+
+- bring serverside
+	- updateProjectilesDtl
+	- updateProjectilesMapBounds
+	- actually: share classes between client/server
+
+- refactor game classes
+
+- projectile_damage and other vars on the server
+	- synch config vars on connect
+
+- use updatePlayerField on the server
+
+-> death/respawn
+
+- background tab canvas projectile queue spread -> check timers
+
+server tick queue / nextTick
+
+-> server projectiles
+-> fix shoot projectile from the center
