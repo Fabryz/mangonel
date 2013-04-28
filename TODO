@@ -3,3 +3,5 @@
   - projectile synch
   - projectile owner
   - health synch / respawn
+
+- remove / fix (click+drag out of canvas) countinuous fire
