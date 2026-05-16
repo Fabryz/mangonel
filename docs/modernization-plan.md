@@ -63,7 +63,7 @@ Core gameplay/template capabilities:
 ## Phase 0 — Baseline & Safety Net (1–2 days)
 1. Add CI (lint, typecheck, test).
 2. Add smoke tests for connect/move/disconnect using `socket.io-client`.
-3. Add benchmark script for tick loop + broadcast load.
+3. ~~Add benchmark script for tick loop + broadcast load.~~ ✅ Completed (2026-05-16).
 
 ## Phase 1 — Platform upgrade (2–4 days)
 1. Upgrade Node/Express/Socket.IO.
