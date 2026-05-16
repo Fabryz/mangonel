@@ -25,6 +25,7 @@
   "scripts": {
     "lint": "node scripts/lint.js",
     "typecheck": "node scripts/typecheck.js",
-    "test": "node --test"
+    "test": "node --test",
+    "benchmark": "node scripts/benchmark.js"
   }
 }
