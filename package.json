@@ -21,5 +21,10 @@
     "html5"
   ],
   "private": true,
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "lint": "node scripts/lint.js",
+    "typecheck": "node scripts/typecheck.js",
+    "test": "node --test"
+  }
 }
